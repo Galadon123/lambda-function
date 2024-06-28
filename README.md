@@ -1,6 +1,4 @@
-Sure, here's a comprehensive step-by-step guide for automating the deployment of an AWS Lambda function using Docker and GitHub Actions.
 
----
 
 # Automating AWS Lambda Function Deployment Using Docker and GitHub Actions
 
