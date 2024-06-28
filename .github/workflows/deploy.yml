@@ -1,4 +1,4 @@
-name: Create Lambda Function with Docker Image
+name: Deploy Lambda Function
 
 on:
   push:
@@ -13,26 +13,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install awscli
+
+      - name: Login to AWS ECR Public
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
 
       - name: Build and push Docker image
+        env:
+          ECR_REGISTRY: public.ecr.aws/b3e1t4q3
+          ECR_REPOSITORY: my-lambda-function
+          IMAGE_TAG: latest
         run: |
-          docker build -t lambda-docker .
-          docker tag lambda-docker:latest fazlulkarim105925/lambda-docket:latest
-          docker push fazlulkarim105925/lambda-docket:latest
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Create AWS Lambda function with Docker image
+      - name: Update AWS Lambda function
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1
+          ECR_REGISTRY: public.ecr.aws/b3e1t4q3
+          ECR_REPOSITORY: my-lambda-function
+          IMAGE_TAG: latest
         run: |
-          aws lambda create-function \
+          aws lambda update-function-code \
             --function-name my-lambda-function \
-            --package-type Image \
-            --code ImageUri=fazlulkarim105925/lambda-docket:latest \
-            --role arn:aws:iam::<your-account-id>:role/<your-lambda-execution-role> \
-            --region us-east-1
+            --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            --region $AWS_REGION
