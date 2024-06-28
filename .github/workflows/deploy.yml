@@ -22,8 +22,8 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t lambda-docker .
-          docker tag lambda-docker:latest <your-registry>/<repo-name>:<tag>
-          docker push <your-registry>/<repo-name>:<tag>
+          docker tag lambda-docker:latest fazlulkarim105925/lambda-docket:latest
+          docker push fazlulkarim105925/lambda-docket:latest
 
       - name: Update AWS Lambda function
         env:
