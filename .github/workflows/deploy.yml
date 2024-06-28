@@ -32,7 +32,7 @@ jobs:
 
       - name: Build and push Docker image
         env:
-          ECR_REGISTRY: public.ecr.aws/b3e1t4q3
+          ECR_REGISTRY: 767398133420.dkr.ecr.us-east-1.amazonaws.com
           ECR_REPOSITORY: my-lambda-function
           IMAGE_TAG: latest
         run: |
