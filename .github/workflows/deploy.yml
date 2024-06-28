@@ -28,12 +28,12 @@ jobs:
 
       - name: Login to AWS ECR
         run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 730335365460.dkr.ecr.us-east-1.amazonaws.com/my-lambda-function-7ef7443
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 730335365460.dkr.ecr.us-east-1.amazonaws.com/my-lambda-function
 
       - name: Build and push Docker image
         env:
           ECR_REGISTRY: 730335365460.dkr.ecr.us-east-1.amazonaws.com
-          ECR_REPOSITORY: my-lambda-function-7ef7443
+          ECR_REPOSITORY: my-lambda-function
           IMAGE_TAG: latest
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -45,9 +45,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
           ECR_REGISTRY: 730335365460.dkr.ecr.us-east-1.amazonaws.com
-          ECR_REPOSITORY: my-lambda-function-7ef7443
+          ECR_REPOSITORY: my-lambda-function
           IMAGE_TAG: latest
-          LAMBDA_ROLE_ARN: arn:aws:iam::730335365460:role/lambda-role # Replace with your IAM role ARN for Lambda
+          LAMBDA_ROLE_ARN: arn:aws:iam::730335365460:role/lambda-role-b76d667 # Replace with your IAM role ARN for Lambda
         run: |
           FUNCTION_NAME=my-lambda-function
           IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
