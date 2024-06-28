@@ -60,7 +60,7 @@ lambda_policy = aws.iam.RolePolicy("lambda-policy",
                                        ]
                                    }""")
 
-# Create a Lambda function with a Docker image
+# Create a Lambda function with a Docker image and launch it in the private subnet
 lambda_function = aws.lambda_.Function("my-lambda-function",
                                        function_name="my-lambda-function",
                                        package_type="Image",
@@ -68,6 +68,18 @@ lambda_function = aws.lambda_.Function("my-lambda-function",
                                        role=lambda_role.arn,
                                        timeout=60,
                                        memory_size=128,
+                                       vpc_config={
+                                           "subnet_ids": [private_subnet.id],
+                                           "security_group_ids": [aws.ec2.SecurityGroup("lambda-security-group",
+                                                                                         vpc_id=vpc.id,
+                                                                                         egress=[{
+                                                                                             "protocol": "-1",
+                                                                                             "from_port": 0,
+                                                                                             "to_port": 0,
+                                                                                             "cidr_blocks": ["0.0.0.0/0"],
+                                                                                         }],
+                                                                                         tags={"Name": "lambda-security-group"}).id],
+                                       },
                                        environment={
                                            "variables": {
                                                "EXAMPLE_ENV_VAR": "example-value"
