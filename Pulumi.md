@@ -1,3 +1,4 @@
+```python
 import pulumi
 import pulumi_aws as aws
 
@@ -94,3 +95,4 @@ pulumi.export("vpc_id", vpc.id)
 pulumi.export("private_subnet_id", private_subnet.id)
 pulumi.export("ecr_repo_url", ecr_repo.repository_url)
 pulumi.export("lambda_function_arn", lambda_function.arn)
+```
