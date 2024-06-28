@@ -30,4 +30,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          aws lambda update-function-code --function-name my-lambda-action --image-uri fazlulkarim105925/lambda-docket:latest --region us-east-1
+          aws lambda update-function-code --function-name my-lambda-function --image-uri fazlulkarim105925/lambda-docket:latest --region us-east-1
