@@ -26,9 +26,9 @@ jobs:
           sudo apt-get install -y python3-pip
           pip3 install awscli
 
-      - name: Login to AWS ECR Public
+      - name: Login to AWS ECR
         run: |
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin 767398133420.dkr.ecr.us-east-1.amazonaws.com
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 767398133420.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Build and push Docker image
         env:
@@ -44,7 +44,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: us-east-1
-          ECR_REGISTRY: public.ecr.aws/b3e1t4q3
+          ECR_REGISTRY: 767398133420.dkr.ecr.us-east-1.amazonaws.com
           ECR_REPOSITORY: my-lambda-function
           IMAGE_TAG: latest
         run: |
